@@ -47,11 +47,11 @@ return [
         ],
 
         'ngo' => [
-            'driver' => 'sanctum',
+            'driver' => 'jwt',
             'provider' => 'ngos',
         ],
         'donor' => [
-            'driver' => 'sanctum',
+            'driver' => 'jwt',
             'provider' => 'donors',
         ],
     ],

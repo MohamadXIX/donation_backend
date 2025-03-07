@@ -63,9 +63,53 @@ class AuthController extends Controller
     }
 
 
-    public function logout(Request $request)
+    // public function logout(Request $request)
+    // {
+    //     $request->user()->tokens()->delete();
+    //     return response()->json(['message' => 'Logged out successfully']);
+    // }
+
+    public function logout()
     {
-        $request->user()->tokens()->delete();
-        return response()->json(['message' => 'Logged out successfully']);
+        auth()->logout();
+
+        return response()->json(['message' => 'Successfully logged out']);
+    }
+
+
+    // Donor Login
+    public function loginDonor(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        if (!$token = Auth::guard('donor')->attempt($credentials)) {
+            return response()->json(['message' => 'Incorrect email or password'], 403);
+        }
+
+        return response()->json([
+            'donor' => Auth::guard('donor')->user(),
+            'token' => $token
+        ]);
+    }
+
+    //Donor Registration
+    public function RegisterDonor(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:donors',
+            'password' => 'required'
+        ]);
+
+        $donor = Donor::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => encrypt($data['password']),
+        ]);
+
+        return response()->json(['message' => 'Donor registered successfully', 'donor' => $donor], 201);
     }
 }

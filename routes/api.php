@@ -10,4 +10,12 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::middleware('auth:user')->post('/logout', [AuthController::class, 'logout']);
+//Donors Routes
+Route::post('/donor/login', [AuthController::class, 'loginDonor']);
+Route::post('/donor/register', [AuthController::class, 'RegisterDonor']);
+
+
+Route::middleware('auth:jwt,user')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+});
+
